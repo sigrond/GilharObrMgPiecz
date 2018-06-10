@@ -1,12 +1,12 @@
-function [ obrNaS ] = ObrNaSPiorun( obw, zr )
-%ObrNaSPiorun funkcja zwraca obra¿enia na sekundê nowej magii pieczêci
+function [ obrNaS ] = ObrNaSZiemia( obw, zr )
+%ObrNaSZiemia funkcja zwraca obra¿enia na sekundê nowej magii pieczêci
 %   zale¿y od obwodów i zrêcznoœci, zrêcznoœ przelicza siê na najwy¿szy
 %   test na którym mo¿na rzuciæ pieczêæ oraz zmniejsza obra¿enia o szansê
 %   pora¿ki wynikaj¹c¹ ze zrêcznoœci na danym poziomie. 
 %   brane s¹ pod uwagê modyfikatory wsp. ataku i zr. dla danego elementu.
 %   wybierany jest próg testowy na którym bêdzie zadane najwiêcej obra¿eñ
-elementWspMod=0.3;%modyfikator wsp. ataku za element
-modZRZaEl=-3;%modyfikator do zr. za element
+elementWspMod=(19/20)*0.2+(1/20)*0.5;%modyfikator wsp. ataku za element
+modZRZaEl=0;%modyfikator do zr. za element
 PI = zr < 11;
     zrI=(zr+10+modZRZaEl*3);
     obrI=obw .*PI .* (1+elementWspMod*3) .* zrI./20;

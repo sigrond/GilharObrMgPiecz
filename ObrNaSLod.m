@@ -1,22 +1,34 @@
 function [ obrNaS ] = ObrNaSLod( obw, zr )
-%ObrNaS funkcja zwraca obra¿enia na sekundê nowej magii pieczêci
+%ObrNaSLod funkcja zwraca obra¿enia na sekundê nowej magii pieczêci
 %   zale¿y od obwodów i zrêcznoœci, zrêcznoœ przelicza siê na najwy¿szy
 %   test na którym mo¿na rzuciæ pieczêæ oraz zmniejsza obra¿enia o szansê
-%   pora¿ki wynikaj¹c¹ ze zrêcznoœci na danym poziomie. modyfikatory do
-%   obwodów i obra¿eniñ nie s¹ brane pod uwagê
+%   pora¿ki wynikaj¹c¹ ze zrêcznoœci na danym poziomie. 
+%   brane s¹ pod uwagê modyfikatory wsp. ataku i zr. dla danego elementu.
+%   wybierany jest próg testowy na którym bêdzie zadane najwiêcej obra¿eñ
+elementWspMod=0.2;%modyfikator wsp. ataku za element
+modZRZaEl=0;%modyfikator do zr. za element
 PI = zr < 11;
-    zrI=(zr+10).*PI;
-    %obrNaS = obw * zrI/20;
+    zrI=(zr+10+modZRZaEl*3);
+    obrI=obw .*PI .* (1+elementWspMod*3) .* zrI./20;
 PII = zr>10 & zr<21; 
-    zrII=zr.*PII;
-    %obrNaS = obw * (3/2) * zrII/20;
-PIII = zr>20 & zr<31;
-    zrIII=(zr-10).*PIII;
-    %obrNaS = obw * 2 * zrIII/20;
-PIV = zr>30;
-    %obrNaS = obw * 2;
-    elementWspMod=0.2;
+    zrII=(zr+modZRZaEl*7);
+    zrI=zrI.*(zrI<21) + 20.*(zrI>=21);
+    obrIpII=obw .*PII .* (1+elementWspMod*3) .* zrI./20;
+    obrIIpII=obw .*PII .* (1+elementWspMod*7) .* (3/2) .* zrII./20;
+    obrII=obrIpII.*(obrIpII>obrIIpII) + obrIIpII.*(obrIpII<=obrIIpII);
+PIII = zr>20 & zr+modZRZaEl*9<31;
+    zrIII=(zr-10+modZRZaEl*9);
+    zrII=zrII.*(zrII<21) + 20.*(zrII>=21);
+    obrIpIII=obw .*PIII .* (1+elementWspMod*3) .* zrI./20;
+    obrIIpIII=obw .*PIII .* (1+elementWspMod*7) .* (3/2) .* zrII./20;
+    obrIIIpIII=obw .*PIII .* (1+elementWspMod*9) .* 2 .* zrIII./20;
+    obrIII=obrIpIII.*(obrIpIII>obrIIpIII & obrIpIII>obrIIIpIII)...
+        + obrIIpIII.*(obrIpIII<=obrIIpIII & obrIIpIII>=obrIIIpIII) ...
+        + obrIIIpIII.*(obrIIIpIII>obrIpIII & obrIIIpIII>obrIIpIII);
+PIV = zr+modZRZaEl*9>30;
+    obrIV=obw .* PIV .*(1+elementWspMod*9) .* 2;
     
-    obrNaS = obw .* ((PI .*(1+elementWspMod*3) .* zrI./20) + (PII .*(1+elementWspMod*7) .* (3/2) .* zrII./20) + (PIII .*(1+elementWspMod*9) .* 2 .* zrIII./20) + (PIV .*(1+elementWspMod*9) .* 2));
+    
+    obrNaS = obrI + obrII + obrIII + obrIV;
 end
 
